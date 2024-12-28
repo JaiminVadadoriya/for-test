@@ -1,0 +1,49 @@
+<div class="dropdown-tree">
+  <div class="header">
+    <label *ngIf="showSelectAll">
+      <input
+        type="checkbox"
+        [(ngModel)]="selectAll"
+        (change)="toggleSelectAll()"
+      />
+      {{ selectAll ? unSelectAllText : selectAllText }}
+    </label>
+  </div>
+  <ul class="tree-list">
+    <li *ngFor="let node of treeData" [class.has-children]="node.hasChild">
+      <div class="tree-item" *ngIf="!node.pid">
+        <button
+          *ngIf="node.hasChild"
+          class="toggle-btn"
+          (click)="toggleNode(node)"
+        >
+          {{ node.expanded ? "v" : ">" }}
+        </button>
+        <label>
+          <input
+            type="checkbox"
+            [(ngModel)]="node.checked"
+            (change)="onNodeCheckChange(node, false)"
+          />
+          {{ node.name }}
+        </label>
+      </div>
+      <ul *ngIf="node.expanded && node.hasChild">
+        <ng-container *ngFor="let child of getChildren(node.id)">
+          <li>
+            <div class="tree-item">
+              <label>
+                <input
+                  type="checkbox"
+                  [(ngModel)]="child.checked"
+                  (change)="onNodeCheckChange(child, true)"
+                />
+                {{ child.name }}
+              </label>
+            </div>
+          </li>
+        </ng-container>
+      </ul>
+    </li>
+  </ul>
+</div>

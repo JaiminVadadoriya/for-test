@@ -1,0 +1,56 @@
+/* dropdown-tree.component.css */
+.dropdown-tree {
+    position: relative;
+    width: 300px;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background: #f9f9f9;
+    cursor: pointer;
+  }
+  
+  .dropdown-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background: #fff;
+    z-index: 1000;
+  }
+  
+  .select-all {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    background: #f9f9f9;
+  }
+  
+  .tree-list {
+    list-style: none;
+    margin: 0;
+    padding: 10px;
+  }
+  
+  .tree-item {
+    display: flex;
+    align-items: center;
+  }
+  
+  .toggle-icon {
+    cursor: pointer;
+    margin-right: 5px;
+  }
+  
+  .has-children > .tree-item {
+    font-weight: bold;
+  }
+  
