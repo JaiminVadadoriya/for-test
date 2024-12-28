@@ -8,13 +8,11 @@ import { TreeNode } from '../helper/tree-node';
 })
 export class DropdownTreeComponent {
   @Input() data: TreeNode[] = [];
-  @Input() showCheckBox: boolean = true;
-  @Input() showSelectAll: boolean = true;
-  @Input() selectAllText: string = 'Select All';
-  @Input() unSelectAllText: string = 'Unselect All';
+  @Input() selectAllChildren: boolean = true;
 
   treeData: TreeNode[] = [];
-  selectedItems: string[] = [];
+  selectedItems: TreeNode[] = [];
+  dropdownVisible: boolean = true;
 
   selectAll: boolean = false;
   isDropdownOpen: boolean = false;
@@ -24,7 +22,7 @@ export class DropdownTreeComponent {
   }
 
   initializeTree(): void {
-    this.treeData = this.data.map((node) => ({ ...node, checked: false, expanded: false }));
+    this.treeData = this.data.map((node) => ({ ...node, checked: node.checked, expanded: false }));
   }
 
   toggleDropdown(): void {
@@ -34,36 +32,57 @@ export class DropdownTreeComponent {
   toggleNode(node: TreeNode): void {
     node.expanded = !node.expanded;
   }
+  
 
   getChildren(parentId: number): TreeNode[] {
     return this.treeData.filter((node) => node.pid === parentId);
   }
 
   onNodeCheckChange(node: TreeNode, isChild: boolean): void {
-    if (!isChild && node.hasChild) {
-      this.getChildren(node.id).forEach(child => (child.checked = false));
+    node.checked = !node.checked; // Ensure the checked state toggles
+    if (node.checked) {
+      this.addItem(node);
+    } else {
+      this.removeItem(node);
     }
-    // this.updateSelectedItems();
+  
+    // Ensure child nodes are handled properly
+    if (!isChild && node.hasChild && this.selectAllChildren) {
+      this.getChildren(node.id).forEach(child => {
+        child.checked = node.checked;
+        if (child.checked) {
+          this.addItem(child);
+        } else {
+          this.removeItem(child);
+        }
+      });
+    }
     this.updateSelectAllState();
   }
+  
 
-  toggleSelectAll(): void {
-    this.treeData.forEach((node) => (node.checked = this.selectAll));
-    this.updateSelectedItems();
+
+  addItem(node: TreeNode): void {
+    if (!this.selectedItems.find(item => item.id === node.id)) {
+      this.selectedItems.push(node);
+    }
+  }
+  
+  removeItem(node: TreeNode): void {
+    this.selectedItems = this.selectedItems.filter(item => item.id !== node.id);
+  }
+  
+  clearAll(): void {
+    this.selectedItems.forEach(item => (item.checked = false));
+    this.selectedItems = [];
+    this.treeData.forEach(node => (node.checked = false));  // Clear checkbox state
+    this.updateSelectAllState();
   }
 
   updateSelectAllState(): void {
     this.selectAll = this.treeData.every((node) => node.checked);
   }
 
-  updateSelectedItems(): void {
-    this.selectedItems = this.treeData.filter((node) => node.checked).map((node) => node.name);
-  }
+  
 
-  clearSelection(event: Event): void {
-    event.stopPropagation();
-    this.treeData.forEach((node) => (node.checked = false));
-    this.updateSelectedItems();
-    this.selectAll = false;
-  }
 }
