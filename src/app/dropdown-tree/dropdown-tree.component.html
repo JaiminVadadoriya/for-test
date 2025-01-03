@@ -4,52 +4,49 @@
       {{ item.name }}
       <button class="remove-tag-btn" (click)="removeItem(item)">x</button>
     </span>
-    <button
-      class="clear-all-btn"
-      *ngIf="selectedItems.length"
-      (click)="clearAll()"
-    >
-      Clear All
-    </button>
-    <button mat-icon-button class="toggle-btn" (click)="toggleDropdown()">
-      
-      <mat-icon aria-label="expand/collapse icon"  >
-        {{isDropdownOpen ? 'arrow_drop_up' : 'arrow_drop_down'}}
-      </mat-icon>
-    </button>
+    <div class="right-option">
+
+      <button class="clear-all-btn" *ngIf="selectedItems.length" (click)="clearAll()">
+        Clear All
+      </button>
+      <button mat-icon-button class="toggle-btn" (click)="toggleDropdown()">
+        
+        <mat-icon aria-label="expand/collapse icon">
+          {{isDropdownOpen ? 'arrow_drop_up' : 'arrow_drop_down'}}
+        </mat-icon>
+      </button>
+    </div>
   </div>
 
   <div class="dropdown-tree" [ngClass]="{ open: isDropdownOpen }">
     <ul>
       <ng-container *ngFor="let node of treeData">
-        <li *ngIf="node.hasChild" >
-          <button mat-icon-button (click)="toggleNode(node)">
-            <mat-icon aria-label="expand/collapse icon"  >
+        <li *ngIf="node.hasChild">
+          <div class="node-container">
+
+            <button mat-icon-button (click)="toggleNode(node)">
+              <mat-icon aria-label="expand/collapse icon">
                 {{node.expanded ? 'keyboard_arrow_down' : 'keyboard_arrow_right'}}
               </mat-icon>
-          </button>
-          <label >
-            <input
-              type="checkbox"
-              [checked]="node.checked"
-              (change)="onNodeCheckChange(node, false)"
-            />
-            <span class="custom-checkbox"></span>
-          </label>
-          
+            </button>
+            <label class="checkbox-container">
+              <input type="checkbox" [checked]="node.checked" (change)="onNodeCheckChange(node, false)" />
+              <span class="custom-checkbox"></span>
+            </label>
+            
 
-          {{ node.name }}
+            {{ node.name }}
+          </div>
           <ul *ngIf="node.expanded">
             <li *ngFor="let child of getChildren(node.id)">
-              <label>
-                <input
-                  type="checkbox"
-                  [checked]="child.checked"
-                  (change)="onNodeCheckChange(child, true)"
-                />
-                <span class="custom-checkbox"></span>
-              </label>
-              {{ child.name }}
+              <div class="node-container">
+                
+                <label class="checkbox-container">
+                  <input type="checkbox" [checked]="child.checked" (change)="onNodeCheckChange(child, true)" />
+                  <span class="custom-checkbox"></span>
+                </label>
+                {{ child.name }}
+              </div>
             </li>
           </ul>
         </li>
@@ -57,3 +54,12 @@
     </ul>
   </div>
 </div>
+
+<label class="checkbox-container">
+  <input type="checkbox" [checked]="true"  />
+  <span class="custom-checkbox"></span>
+</label>
+<label class="checkbox-container">
+  <input type="checkbox" [checked]="false"  />
+  <span class="custom-checkbox"></span>
+</label>
